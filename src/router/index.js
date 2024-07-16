@@ -6,7 +6,6 @@ import LogoutView from "../views/LogoutView.vue";
 import AcessorioView from "../views/AcessoriosView.vue";
 import CorView from "../views/CorView.vue";
 import MarcaView from "../views/MarcaView.vue";
-import UserView from "../views/UserView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,11 +45,6 @@ const router = createRouter({
       name: "marca",
       component: MarcaView,
     },
-    {
-      path:"/user",
-      name: "user",
-      component: UserView,
-    }
   ],
 });
 

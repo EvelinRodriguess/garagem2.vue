@@ -1,56 +1,57 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import MarcaApi from "@/api/marca";
-const marcaApi = new MarcaApi();
+import MarcasApi from "@/api/marcas";
+const marcasApi = new MarcasApi();
 
-const defaultCategoria = { id: null, descricao: "" };
-const marca = ref([]);
-const categoria = reactive({ ...defaultCategoria });
+const defaultMarca = { id: null, nome: "", nacionalidade:"" };
+const marcas = ref([]);
+const marca = reactive({ ...defaultMarca });
 
 onMounted(async () => {
-  marca.value = await marcaApi.buscarTodasAsMarca();
+  marcas.value = await marcasApi.buscarTodasAsMarcas();
 });
 
 function limpar() {
-  Object.assign(categoria, { ...defaultCategoria });
+  Object.assign(marca, { ...defaultMarca });
 }
 
 async function salvar() {
-  if (categoria.id) {
-    await marcaApi.atualizarCategoria(categoria);
+  if (marca.id) {
+    await marcasApi.atualizarMarca(marca);
   } else {
-    await marcaApi.adicionarCategoria(categoria);
+    await marcasApi.adicionarMarca(marca);
   }
-  marca.value = await marcaApi.buscarTodasAsMarca();
+  marcas.value = await marcasApi.buscarTodasAsMarcas();
   limpar();
 }
 
-function editar(categoria_para_editar) {
-  Object.assign(categoria, categoria_para_editar);
+function editar(marca_para_editar) {
+  Object.assign(marca, marca_para_editar);
 }
 
 async function excluir(id) {
-  await marcaApi.excluirCategoria(id);
-  marca.value = await marcaApi.buscarTodasAsMarca();
+  await marcasApi.excluirMarca(id);
+  marcas.value = await marcasApi.buscarTodasAsMarcas();
   limpar();
 }
 </script>
 
 <template>
-  <h1>Categoria</h1>
+  <h1>Marca</h1>
   <hr />
   <div class="form">
-    <input type="text" v-model="categoria.descricao" placeholder="Descrição" />
+    <input type="text" v-model="marca.nome" placeholder="Nome" />
+    <input type="text" v-model="marca.nacionalidade" placeholder="Nacionalidade" />
     <button @click="salvar">Salvar</button>
     <button @click="limpar">Limpar</button>
   </div>
   <hr />
   <ul>
-    <li v-for="categoria in marca" :key="categoria.id">
-      <span @click="editar(categoria)">
-        ({{ categoria.id }}) - {{ categoria.descricao }} -
+    <li v-for="marca in marcas" :key="marca.id">
+      <span @click="editar(marca)">
+        ({{ marca.id }}) - {{ marca.nome }} - {{ marca.nacionalidade }}
       </span>
-      <button @click="excluir(categoria.id)">X</button>
+      <button @click="excluir(marca.id)">X</button>
     </li>
   </ul>
 </template>

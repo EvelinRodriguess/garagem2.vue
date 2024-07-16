@@ -1,56 +1,56 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import CorApi from "@/api/cor";
-const corApi = new CorApi();
+import CoresApi from "@/api/cores";
+const coresApi = new CoresApi();
 
-const defaultCategoria = { id: null, descricao: "" };
-const cor = ref([]);
-const categoria = reactive({ ...defaultCategoria });
+const defaultCor = { id: null, nome: "" };
+const cores = ref([]);
+const cor = reactive({ ...defaultCor });
 
 onMounted(async () => {
-  cor.value = await corApi.buscarTodasAsCor();
+  cores.value = await coresApi.buscarTodasAsCores();
 });
 
 function limpar() {
-  Object.assign(categoria, { ...defaultCategoria });
+  Object.assign(cor, { ...defaultCor });
 }
 
 async function salvar() {
-  if (categoria.id) {
-    await corApi.atualizarCategoria(categoria);
+  if (cor.id) {
+    await coresApi.atualizarCor(cor);
   } else {
-    await corApi.adicionarCategoria(categoria);
+    await coresApi.adicionarCor(cor);
   }
-  cor.value = await corApi.buscarTodasAsCor();
+  cores.value = await coresApi.buscarTodasAsCores();
   limpar();
 }
 
-function editar(categoria_para_editar) {
-  Object.assign(categoria, categoria_para_editar);
+function editar(cor_para_editar) {
+  Object.assign(cor, cor_para_editar);
 }
 
 async function excluir(id) {
-  await corApi.excluirCategoria(id);
-  cor.value = await corApi.buscarTodasAsCor();
+  await coresApi.excluirCor(id);
+  cores.value = await coresApi.buscarTodasAsCores();
   limpar();
 }
 </script>
 
 <template>
-  <h1>Categoria</h1>
+  <h1>Cor</h1>
   <hr />
   <div class="form">
-    <input type="text" v-model="categoria.descricao" placeholder="Descrição" />
+    <input type="text" v-model="cor.nome" placeholder="Nome" />
     <button @click="salvar">Salvar</button>
     <button @click="limpar">Limpar</button>
   </div>
   <hr />
   <ul>
-    <li v-for="categoria in cor" :key="categoria.id">
-      <span @click="editar(categoria)">
-        ({{ categoria.id }}) - {{ categoria.descricao }} -
+    <li v-for="cor in cores" :key="cor.id">
+      <span @click="editar(cor)">
+        ({{ cor.id }}) - {{ cor.nome }} -
       </span>
-      <button @click="excluir(categoria.id)">X</button>
+      <button @click="excluir(cor.id)">X</button>
     </li>
   </ul>
 </template>
